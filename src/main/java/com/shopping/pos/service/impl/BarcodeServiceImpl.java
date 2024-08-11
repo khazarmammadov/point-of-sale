@@ -9,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -21,23 +19,22 @@ public class BarcodeServiceImpl implements BarcodeService {
 
     @Override
     public Barcode createBarcode(CreateBarcodeRequest barcodeRequest) {
+        Barcode existingBarcode = findBySerialNumber(barcodeRequest.getSerialNumber());
 
-        Barcode barcode = findBySerialNumber(barcodeRequest.getSerialNumber());
-
-        if (barcode != null) {
-            return barcode;
-        } else {
-            Barcode barcodeMapperEntity = barcodeMapper.toEntity(barcodeRequest);
-            barcodeRepository.save(barcodeMapperEntity);
+        if (existingBarcode != null) {
+            return existingBarcode;
         }
 
-        return findBySerialNumber(barcodeRequest.getSerialNumber());
+        Barcode newBarcode = barcodeMapper.toEntity(barcodeRequest);
+        barcodeRepository.save(newBarcode);
+
+        return newBarcode;
     }
 
     @Override
     public Barcode findBySerialNumber(Long serialNumber) {
-
         return barcodeRepository.findBySerialNumber(serialNumber)
                 .orElse(null);
     }
 }
+

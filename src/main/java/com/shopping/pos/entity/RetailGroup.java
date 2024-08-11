@@ -2,6 +2,8 @@ package com.shopping.pos.entity;
 
 import lombok.Data;
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -14,8 +16,7 @@ public class RetailGroup {
     private Long id;
 
     @Column(name = "supply_date")
-    @Temporal(TemporalType.DATE)
-    private Date supplyDate;
+    private LocalDateTime supplyDate;
 
     @ManyToOne
     @JoinColumn(name = "supplier_id")

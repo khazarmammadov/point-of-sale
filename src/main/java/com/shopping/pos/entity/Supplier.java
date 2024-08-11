@@ -3,6 +3,8 @@ package com.shopping.pos.entity;
 import lombok.Data;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 @Table(name = "Supplier")
@@ -25,4 +27,7 @@ public class Supplier {
 
     @Column(name = "address")
     private String address;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 }

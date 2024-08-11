@@ -12,6 +12,6 @@ public class CreateBarcodeRequest {
 
     private Long barcodePrefix;
     private Long serialNumber;
-    private LocalDateTime createdAt;
+
 
 }

@@ -13,5 +13,5 @@ public class CreateProductRequest {
     private String description;
     private String size;
     private String color;
-    private LocalDateTime createdAt;
+
 }

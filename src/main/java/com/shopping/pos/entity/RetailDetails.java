@@ -4,6 +4,7 @@ import lombok.Data;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -30,4 +31,9 @@ public class RetailDetails {
 
     @Column(name = "total_price")
     private BigDecimal totalPrice;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+
 }

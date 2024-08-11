@@ -1,6 +1,5 @@
 package com.shopping.pos.service.impl;
 
-
 import com.shopping.pos.dto.request.CreateBarcodeRequest;
 import com.shopping.pos.dto.request.CreateProductRequest;
 import com.shopping.pos.entity.Barcode;
@@ -26,33 +25,36 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void createProduct(Long serialNumber, CreateProductRequest productRequest) {
-
-        Barcode barcode = barcodeService.findBySerialNumber(serialNumber);
-
-        if (barcode != null) {
-
-            Product productMapperEntity = productMapper.toEntity(productRequest);
-            productMapperEntity.setBarcode(barcode);
-            productRepository.save(productMapperEntity);
-
-        } else {
-            CreateBarcodeRequest barcodeRequest = new CreateBarcodeRequest();
-
-            barcodeRequest.setBarcodePrefix(productRequest.getModelNum());
-            barcodeRequest.setSerialNumber(serialNumber);
-
-            barcode = barcodeService.createBarcode(barcodeRequest);
-
-            Product productMapperEntity = productMapper.toEntity(productRequest);
-            productMapperEntity.setBarcode(barcode);
-            productRepository.save(productMapperEntity);
+        if (isProductExists(serialNumber)) {
+            throw new RuntimeException("Product already exists.");
         }
+
+        Barcode barcode = createBarcode(serialNumber, productRequest);
+        Product product = mapToProductEntity(productRequest, barcode);
+        productRepository.save(product);
     }
 
     @Override
     public Product findProductByBarcodeId(Long serialNumber) {
         Barcode barcode = barcodeService.findBySerialNumber(serialNumber);
-
         return productRepository.findProductByBarcode_Id(barcode.getId()).orElse(null);
     }
+
+    private boolean isProductExists(Long serialNumber) {
+        return barcodeService.findBySerialNumber(serialNumber) != null;
+    }
+
+    private Barcode createBarcode(Long serialNumber, CreateProductRequest productRequest) {
+        CreateBarcodeRequest barcodeRequest = new CreateBarcodeRequest();
+        barcodeRequest.setBarcodePrefix(productRequest.getModelNum());
+        barcodeRequest.setSerialNumber(serialNumber);
+        return barcodeService.createBarcode(barcodeRequest);
+    }
+
+    private Product mapToProductEntity(CreateProductRequest productRequest, Barcode barcode) {
+        Product product = productMapper.toEntity(productRequest);
+        product.setBarcode(barcode);
+        return product;
+    }
 }
+

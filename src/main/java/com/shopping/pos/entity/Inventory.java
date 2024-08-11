@@ -20,7 +20,7 @@ public class Inventory {
     private Product product;
 
     @Column(name = "count")
-    private Integer count;
+    private int count;
 
     @Column(name = "added_date")
     private LocalDateTime addedDate;
